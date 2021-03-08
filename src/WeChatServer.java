@@ -35,7 +35,7 @@ public class WeChatServer extends ConsoleProgram
     public String requestMade(Request request) {
         String cmd = request.getCommand();
         println(request.toString());
-        
+
         String name = request.getParam("name");
 
         Account account = accounts.get(name);
@@ -45,17 +45,17 @@ public class WeChatServer extends ConsoleProgram
             case "ping":
                 return "pong";
             case "addAccount":
-                if (account == null) {
+                if (account == null ) {
                     account = new Account(name);
                     accounts.put(name, account);
-                    return SUCCESS_MSG + "账号已添加";
+                    return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
                 if (name == null || accounts.containsKey(name)) {
                     accounts.remove(name);
-                    return SUCCESS_MSG + "账号已删除";
+                    return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号不存在";
                 }
