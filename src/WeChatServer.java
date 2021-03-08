@@ -35,6 +35,7 @@ public class WeChatServer extends ConsoleProgram
     public String requestMade(Request request) {
         String cmd = request.getCommand();
         println(request.toString());
+        
         String name = request.getParam("name");
 
         Account account = accounts.get(name);
