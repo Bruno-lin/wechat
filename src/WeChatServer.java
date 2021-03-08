@@ -53,10 +53,10 @@ public class WeChatServer extends ConsoleProgram
                 }
             case "deleteAccount":
                 if (account != null) {
-                    accounts.remove(name, account);
+                    accounts.remove(name);
                     return SUCCESS_MSG + "账号已删除";
                 } else {
-                    return FAILURE_PREFIX + "账号不存在";
+                    return FAILURE_PREFIX + "账号不存在" + name;
                 }
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
