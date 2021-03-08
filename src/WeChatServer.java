@@ -30,8 +30,10 @@ public class WeChatServer extends ConsoleProgram
         println(request.toString());
 
         // TODO:
-
-        return FAILURE_PREFIX + "未知命令【" + cmd + "】";
+        if (cmd.equals("ping")) {
+            return SUCCESS_MSG + " " + "pong";
+        } else {
+            return FAILURE_PREFIX + "未知命令【" + cmd + "】";
+        }
     }
-
 }
