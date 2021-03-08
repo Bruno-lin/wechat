@@ -53,11 +53,17 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
-                if (name == null || accounts.containsKey(name)) {
+                if (accounts.containsKey(name)) {
                     accounts.remove(name);
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号不存在";
+                }
+            case "haveAccount":
+                if (accounts.containsKey(name)){
+                    return SUCCESS_MSG;
+                }else {
+                    return FAILURE_PREFIX;
                 }
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
