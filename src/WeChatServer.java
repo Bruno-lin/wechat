@@ -31,7 +31,7 @@ public class WeChatServer extends ConsoleProgram
 
         // TODO:
         if (cmd.equals("ping")) {
-            return SUCCESS_MSG + " " + "pong";
+            return "pong";
         } else {
             return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
