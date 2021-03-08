@@ -3,6 +3,10 @@ import adalab.core.net.Request;
 import adalab.core.net.SimpleServer;
 import adalab.core.net.SimpleServerListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class WeChatServer extends ConsoleProgram
         implements SimpleServerListener {
 
@@ -13,6 +17,9 @@ public class WeChatServer extends ConsoleProgram
 
     /* 服务器对象，composition over inheritance */
     private SimpleServer server = new SimpleServer(this, PORT);
+
+    /* 存储账号 */
+    private Map<String, Account> accounts = new HashMap<>();
 
     public void run() {
         server.start();
@@ -28,12 +35,31 @@ public class WeChatServer extends ConsoleProgram
     public String requestMade(Request request) {
         String cmd = request.getCommand();
         println(request.toString());
+        String name = request.getParam("name");
+
+        Account account = accounts.get(name);
 
         // TODO:
-        if (cmd.equals("ping")) {
-            return "pong";
-        } else {
-            return FAILURE_PREFIX + "未知命令【" + cmd + "】";
+        switch (cmd) {
+            case "ping":
+                return "pong";
+            case "addAccount":
+                if (account == null) {
+                    account = new Account(name);
+                    accounts.put(name, account);
+                    return SUCCESS_MSG + "账号已添加";
+                } else {
+                    return FAILURE_PREFIX + "账号已经存在";
+                }
+            case "deleteAccount":
+                if (account != null) {
+                    accounts.remove(name, account);
+                    return SUCCESS_MSG + "账号已删除";
+                } else {
+                    return FAILURE_PREFIX + "账号不存在";
+                }
+            default:
+                return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
     }
 }
