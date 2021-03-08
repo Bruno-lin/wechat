@@ -61,9 +61,9 @@ public class WeChatServer extends ConsoleProgram
                 }
             case "haveAccount":
                 if (accounts.containsKey(name)){
-                    return SUCCESS_MSG;
+                    return "true";
                 }else {
-                    return FAILURE_PREFIX;
+                    return "false";
                 }
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
