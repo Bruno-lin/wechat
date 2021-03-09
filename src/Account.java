@@ -1,11 +1,14 @@
 import acm.graphics.GImage;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class Account {
-    String name;
-    String status;
-    GImage avatar;
+    private String name;
+    private String status;
+    private GImage avatar;
+    private Map<String, Account> friends = new LinkedHashMap<>();
 
     public Account(String name) {
         this.name = name;
@@ -33,5 +36,16 @@ public class Account {
 
     public void setAvatar(GImage avatar) {
         this.avatar = avatar;
+    }
+
+    public Map<String, Account> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(Account account) {
+        String friend_name = account.getName();
+        if (!friends.containsKey(friend_name)){
+            friends.put(friend_name,account);
+        }
     }
 }

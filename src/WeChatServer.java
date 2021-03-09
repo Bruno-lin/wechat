@@ -4,7 +4,8 @@ import adalab.core.net.Request;
 import adalab.core.net.SimpleServer;
 import adalab.core.net.SimpleServerListener;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -20,7 +21,7 @@ public class WeChatServer extends ConsoleProgram
     private SimpleServer server = new SimpleServer(this, PORT);
 
     /* 存储账号 */
-    private Map<String, Account> accounts = new HashMap<>();
+    private Map<String, Account> accounts = new LinkedHashMap<>();
 
     public void run() {
         server.start();
@@ -38,9 +39,14 @@ public class WeChatServer extends ConsoleProgram
         println(request.toString());
 
         String name = request.getParam("name");
+        String name_my = request.getParam("name1");
+        String name_friend = request.getParam("name2");
+
         String imageString = request.getParam("imageString");
 
         Account account = accounts.get(name);
+        Account account_my = accounts.get(name_my);
+        Account account_friend = accounts.get(name_friend);
 
         // TODO:
         switch (cmd) {
@@ -67,7 +73,7 @@ public class WeChatServer extends ConsoleProgram
                     return "false";
                 }
             case "setAvatar":
-                if (name == null || account == null) {
+                if (!accounts.containsKey(name)) {
                     return FAILURE_PREFIX + "头像无法添加";
                 } else {
                     account.setAvatar(HAWTools.stringToImage(imageString));
@@ -75,24 +81,47 @@ public class WeChatServer extends ConsoleProgram
                 }
             case "setStatus":
                 String status = request.getParam("status");
-                if (account == null || status == null) {
+                if (!accounts.containsKey(name)) {
                     return FAILURE_PREFIX;
                 } else {
                     account.setStatus(status);
                     return SUCCESS_MSG;
                 }
             case "getAvatar":
-                if (account == null) {
-                    return FAILURE_PREFIX + "：找不到账户";
+                if (!accounts.containsKey(name)) {
+                    return FAILURE_PREFIX + "找不到账户";
                 } else {
                     return HAWTools.imageToString(account.getAvatar());
                 }
             case "getStatus":
-                if (account == null) {
-                    return FAILURE_PREFIX + "：找不到账户";
+                if (!accounts.containsKey(name)) {
+                    return FAILURE_PREFIX + "找不到账户";
                 } else {
-                    return account.getStatus() != null ? account.getStatus(): "";
+                    return account.getStatus() != null ? account.getStatus() : "";
                 }
+            case "addFriend":
+                if (!accounts.containsKey(name_my) || !accounts.containsKey(name_friend)) {
+                    return FAILURE_PREFIX + "找不到账户";
+                } else if (name_my.equals(name_friend)) {
+                    return FAILURE_PREFIX + "无法将自己添加为好友";
+                } else if (account_my.getFriends().containsKey(name_friend)) {
+                    return FAILURE_PREFIX + "已经添加好友";
+                } else {
+                    account_my.setFriends(account_friend);
+                    return SUCCESS_MSG;
+                }
+            case "getFriends":
+                if(!accounts.containsKey(name)){
+                    return FAILURE_PREFIX + "：找不到账户";
+                }
+                Map<String, Account> friends = account.getFriends();
+                ArrayList<String> list = new ArrayList<>();
+                for (Map.Entry<String, Account> Entry : friends.entrySet()) {
+                    list.add(Entry.getKey());
+                }
+                return "[" +
+                        (String.join(", ", list)) +
+                        "]";
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
