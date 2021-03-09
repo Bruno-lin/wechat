@@ -1,10 +1,12 @@
 import acm.program.ConsoleProgram;
+import acm.util.HAWTools;
 import adalab.core.net.Request;
 import adalab.core.net.SimpleServer;
 import adalab.core.net.SimpleServerListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class WeChatServer extends ConsoleProgram
@@ -37,15 +39,17 @@ public class WeChatServer extends ConsoleProgram
         println(request.toString());
 
         String name = request.getParam("name");
+        String imageString = request.getParam("imageString");
 
         Account account = accounts.get(name);
+
 
         // TODO:
         switch (cmd) {
             case "ping":
                 return "pong";
             case "addAccount":
-                if (account == null ) {
+                if (account == null) {
                     account = new Account(name);
                     accounts.put(name, account);
                     return SUCCESS_MSG;
@@ -53,18 +57,28 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
-                if (accounts.containsKey(name)) {
+                if (account != null) {
                     accounts.remove(name);
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号不存在";
                 }
             case "haveAccount":
-                if (accounts.containsKey(name)){
+                if (account != null) {
                     return "true";
-                }else {
+                } else {
                     return "false";
                 }
+            case "updateAvatar":
+                if (account != null && imageString != null) {
+                    account.setAvatar(HAWTools.stringToImage(imageString));
+                    return SUCCESS_MSG;
+                } else {
+                    return FAILURE_PREFIX + "头像无法添加";
+                }
+            case "updateStatus":
+                String status = account.getStatus();
+                return Objects.requireNonNullElse(status, FAILURE_PREFIX + "查无信息");
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
