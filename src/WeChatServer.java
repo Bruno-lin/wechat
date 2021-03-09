@@ -6,7 +6,6 @@ import adalab.core.net.SimpleServerListener;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class WeChatServer extends ConsoleProgram
@@ -75,12 +74,25 @@ public class WeChatServer extends ConsoleProgram
                     return SUCCESS_MSG;
                 }
             case "setStatus":
-                String status = account.getStatus();
-                return Objects.requireNonNullElse(status, FAILURE_PREFIX + "查无信息");
+                String status = request.getParam("status");
+                if (account == null || status == null) {
+                    return FAILURE_PREFIX;
+                } else {
+                    account.setStatus(status);
+                    return SUCCESS_MSG;
+                }
             case "getAvatar":
-                return Objects.requireNonNullElse(HAWTools.imageToString(account.getAvatar()), FAILURE_PREFIX);
+                if (account == null) {
+                    return FAILURE_PREFIX + "：找不到账户";
+                } else {
+                    return HAWTools.imageToString(account.getAvatar());
+                }
             case "getStatus":
-                return Objects.requireNonNullElse(account.getStatus(), FAILURE_PREFIX);
+                if (account == null) {
+                    return FAILURE_PREFIX + "：找不到账户";
+                } else {
+                    return account.getStatus() != null ? account.getStatus(): "";
+                }
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
