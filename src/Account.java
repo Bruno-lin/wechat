@@ -8,7 +8,7 @@ public class Account {
     private String name;
     private String status;
     private GImage avatar;
-    private Map<String, Account> friends = new LinkedHashMap<>();
+    private LinkedHashMap<String, Account> friends = new LinkedHashMap<>();
 
     public Account(String name) {
         this.name = name;
@@ -38,7 +38,7 @@ public class Account {
         this.avatar = avatar;
     }
 
-    public Map<String, Account> getFriends() {
+    public LinkedHashMap<String, Account> getFriends() {
         return friends;
     }
 

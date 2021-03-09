@@ -7,6 +7,7 @@ import adalab.core.net.SimpleServerListener;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 public class WeChatServer extends ConsoleProgram
@@ -100,8 +101,10 @@ public class WeChatServer extends ConsoleProgram
                     return account.getStatus() != null ? account.getStatus() : "";
                 }
             case "addFriend":
-                if (!accounts.containsKey(name_my) || !accounts.containsKey(name_friend)) {
-                    return FAILURE_PREFIX + "找不到账户";
+                if (!accounts.containsKey(name_my)) {
+                    return FAILURE_PREFIX + "找不到目前账户";
+                } else if (!accounts.containsKey(name_friend)) {
+                    return FAILURE_PREFIX + "找不到账户" + name_friend;
                 } else if (name_my.equals(name_friend)) {
                     return FAILURE_PREFIX + "无法将自己添加为好友";
                 } else if (account_my.getFriends().containsKey(name_friend)) {
@@ -112,17 +115,19 @@ public class WeChatServer extends ConsoleProgram
                     return SUCCESS_MSG;
                 }
             case "getFriends":
-                if (null == account) {
+                if (!accounts.containsKey(name)) {
                     return FAILURE_PREFIX + "：找不到账户";
                 }
-                Map<String, Account> friends = account.getFriends();
-                ArrayList<String> list = new ArrayList<>();
-                for (String key: friends.keySet()){
-                    list.add(key);
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                LinkedHashMap<String, Account> friends = account.getFriends();
+                ArrayList<String> names = new ArrayList<>();
+                for (Map.Entry<String,Account> entry:friends.entrySet()) {
+                    names.add(entry.getKey());
                 }
-                return "[" +
-                        (String.join(", ", list)) +
-                        "]";
+                sb.append(String.join(", ", names));
+                sb.append("]");
+                return sb.toString();
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
