@@ -108,16 +108,17 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "已经添加好友";
                 } else {
                     account_my.setFriends(account_friend);
+                    account_friend.setFriends(account_my);
                     return SUCCESS_MSG;
                 }
             case "getFriends":
-                if(!accounts.containsKey(name)){
+                if (null == account) {
                     return FAILURE_PREFIX + "：找不到账户";
                 }
                 Map<String, Account> friends = account.getFriends();
                 ArrayList<String> list = new ArrayList<>();
-                for (Map.Entry<String, Account> Entry : friends.entrySet()) {
-                    list.add(Entry.getKey());
+                for (String key: friends.keySet()){
+                    list.add(key);
                 }
                 return "[" +
                         (String.join(", ", list)) +
