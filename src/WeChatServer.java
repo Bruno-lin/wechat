@@ -69,14 +69,14 @@ public class WeChatServer extends ConsoleProgram
                 } else {
                     return "false";
                 }
-            case "updateAvatar":
+            case "setAvatar":
                 if (account != null && imageString != null) {
                     account.setAvatar(HAWTools.stringToImage(imageString));
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "头像无法添加";
                 }
-            case "updateStatus":
+            case "setStatus":
                 String status = account.getStatus();
                 return Objects.requireNonNullElse(status, FAILURE_PREFIX + "查无信息");
             default:
