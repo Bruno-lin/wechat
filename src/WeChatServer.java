@@ -61,8 +61,11 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
-                if (accounts.containsKey(name)) {
+                if (name!=null && account!=null) {
                     accounts.remove(name);
+                    for (String key : accounts.keySet()) {
+                        accounts.get(key).getFriends().remove(name);
+                    }
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号不存在";
@@ -101,9 +104,9 @@ public class WeChatServer extends ConsoleProgram
                     return account.getStatus() != null ? account.getStatus() : "";
                 }
             case "addFriend":
-                if (!accounts.containsKey(name_my)) {
-                    return FAILURE_PREFIX + "找不到目前账户";
-                } else if (!accounts.containsKey(name_friend)) {
+                if (name_my==null||account_my==null) {
+                    return FAILURE_PREFIX + "找不到账户";
+                } else if (name_friend==null || account_friend==null) {
                     return FAILURE_PREFIX + "找不到账户" + name_friend;
                 } else if (name_my.equals(name_friend)) {
                     return FAILURE_PREFIX + "无法将自己添加为好友";
@@ -115,7 +118,8 @@ public class WeChatServer extends ConsoleProgram
                     return SUCCESS_MSG;
                 }
             case "getFriends":
-                if (!accounts.containsKey(name)) {
+                account = accounts.get(name);
+                if (name==null||account==null) {
                     return FAILURE_PREFIX + "：找不到账户";
                 }
                 StringBuilder sb = new StringBuilder();
