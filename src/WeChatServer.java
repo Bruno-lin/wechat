@@ -43,15 +43,13 @@ public class WeChatServer extends ConsoleProgram
 
         Account account = accounts.get(name);
 
-
         // TODO:
         switch (cmd) {
             case "ping":
                 return "pong";
             case "addAccount":
                 if (!accounts.containsKey(name)) {
-                    account = new Account(name);
-                    accounts.put(name, account);
+                    accounts.put(name, new Account(name));
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号已经存在";
