@@ -70,7 +70,7 @@ public class WeChatServer extends ConsoleProgram
                     return "false";
                 }
             case "setAvatar":
-                if (account != null && imageString != null) {
+                if (imageString != null) {
                     account.setAvatar(HAWTools.stringToImage(imageString));
                     return SUCCESS_MSG;
                 } else {
@@ -79,6 +79,10 @@ public class WeChatServer extends ConsoleProgram
             case "setStatus":
                 String status = account.getStatus();
                 return Objects.requireNonNullElse(status, FAILURE_PREFIX + "查无信息");
+            case "getAvatar":
+                return Objects.requireNonNullElse(HAWTools.imageToString(account.getAvatar()),FAILURE_PREFIX);
+            case "getStatus":
+                return Objects.requireNonNullElse(account.getStatus(),FAILURE_PREFIX);
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
