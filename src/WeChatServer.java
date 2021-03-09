@@ -49,7 +49,7 @@ public class WeChatServer extends ConsoleProgram
             case "ping":
                 return "pong";
             case "addAccount":
-                if (account == null) {
+                if (!accounts.containsKey(name)) {
                     account = new Account(name);
                     accounts.put(name, account);
                     return SUCCESS_MSG;
@@ -57,32 +57,32 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
-                if (account != null) {
+                if (accounts.containsKey(name)) {
                     accounts.remove(name);
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号不存在";
                 }
             case "haveAccount":
-                if (account != null) {
+                if (accounts.containsKey(name)) {
                     return "true";
                 } else {
                     return "false";
                 }
             case "setAvatar":
-                if (imageString != null) {
+                if (name == null || account == null) {
+                    return FAILURE_PREFIX + "头像无法添加";
+                } else {
                     account.setAvatar(HAWTools.stringToImage(imageString));
                     return SUCCESS_MSG;
-                } else {
-                    return FAILURE_PREFIX + "头像无法添加";
                 }
             case "setStatus":
                 String status = account.getStatus();
                 return Objects.requireNonNullElse(status, FAILURE_PREFIX + "查无信息");
             case "getAvatar":
-                return Objects.requireNonNullElse(HAWTools.imageToString(account.getAvatar()),FAILURE_PREFIX);
+                return Objects.requireNonNullElse(HAWTools.imageToString(account.getAvatar()), FAILURE_PREFIX);
             case "getStatus":
-                return Objects.requireNonNullElse(account.getStatus(),FAILURE_PREFIX);
+                return Objects.requireNonNullElse(account.getStatus(), FAILURE_PREFIX);
             default:
                 return FAILURE_PREFIX + "未知命令【" + cmd + "】";
         }
