@@ -53,14 +53,14 @@ public class WeChatServer extends ConsoleProgram
             case "ping":
                 return "pong";
             case "addAccount":
-                if (name != null && account != null) {
+                if (name != null && !accounts.containsKey(name)) {
                     accounts.put(name, new Account(name));
                     return SUCCESS_MSG;
                 } else {
                     return FAILURE_PREFIX + "账号已经存在";
                 }
             case "deleteAccount":
-                if (name != null && account != null) {
+                if (name != null && accounts.containsKey(name)) {
                     accounts.remove(name);
                     for (String key : accounts.keySet()) {
                         accounts.get(key).getFriends().remove(name);
@@ -70,34 +70,34 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "账号不存在";
                 }
             case "haveAccount":
-                if (accounts.containsKey(name)) {
+                if (name != null && accounts.containsKey(name)) {
                     return "true";
                 } else {
                     return "false";
                 }
             case "setAvatar":
-                if (name == null && account == null) {
-                    return FAILURE_PREFIX + "账号不存在";
+                if (name == null || !accounts.containsKey(name)) {
+                    return FAILURE_PREFIX + "头像无法添加";
                 } else {
                     account.setAvatar(HAWTools.stringToImage(imageString));
                     return SUCCESS_MSG;
                 }
             case "setStatus":
                 String status = request.getParam("status");
-                if (name == null && account == null) {
+                if (name == null || !accounts.containsKey(name)) {
                     return FAILURE_PREFIX;
                 } else {
                     account.setStatus(status);
                     return SUCCESS_MSG;
                 }
             case "getAvatar":
-                if (name == null && account == null) {
+                if (name == null || !accounts.containsKey(name)) {
                     return FAILURE_PREFIX + "找不到账户";
                 } else {
                     return HAWTools.imageToString(account.getAvatar());
                 }
             case "getStatus":
-                if (name == null && account == null) {
+                if (name == null || !accounts.containsKey(name)) {
                     return FAILURE_PREFIX + "找不到账户";
                 } else {
                     return account.getStatus() != null ? account.getStatus() : "";
@@ -122,12 +122,13 @@ public class WeChatServer extends ConsoleProgram
                     return FAILURE_PREFIX + "：找不到账户";
                 }
                 StringBuilder sb = new StringBuilder();
-                sb.append("[");
+
                 LinkedHashMap<String, Account> friends = account.getFriends();
                 ArrayList<String> names = new ArrayList<>();
                 for (Map.Entry<String, Account> entry : friends.entrySet()) {
                     names.add(entry.getKey());
                 }
+                sb.append("[");
                 sb.append(String.join(", ", names));
                 sb.append("]");
                 return sb.toString();
