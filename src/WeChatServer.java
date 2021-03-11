@@ -15,7 +15,7 @@ public class WeChatServer extends ConsoleProgram
     /* 端口 */
     private static final int PORT = 8000;
     private static final String SUCCESS_MSG = "success";
-    private static final String FAILURE_PREFIX = "Error: ";
+    private static final String FAILURE_PREFIX = "Error";
 
     /* 服务器对象，composition over inheritance */
     private SimpleServer server = new SimpleServer(this, PORT);
@@ -57,7 +57,7 @@ public class WeChatServer extends ConsoleProgram
                     accounts.put(name, new Account(name));
                     return SUCCESS_MSG;
                 } else {
-                    return FAILURE_PREFIX + "账号已经存在";
+                    return FAILURE_PREFIX;
                 }
             case "deleteAccount":
                 if (name != null && accounts.containsKey(name)) {
@@ -67,7 +67,7 @@ public class WeChatServer extends ConsoleProgram
                     }
                     return SUCCESS_MSG;
                 } else {
-                    return FAILURE_PREFIX + "账号不存在";
+                    return FAILURE_PREFIX;
                 }
             case "haveAccount":
                 if (name != null && accounts.containsKey(name)) {
@@ -77,7 +77,7 @@ public class WeChatServer extends ConsoleProgram
                 }
             case "setAvatar":
                 if (name == null || !accounts.containsKey(name)) {
-                    return FAILURE_PREFIX + "头像无法添加";
+                    return FAILURE_PREFIX;
                 } else {
                     account.setAvatar(HAWTools.stringToImage(imageString));
                     return SUCCESS_MSG;
@@ -92,25 +92,25 @@ public class WeChatServer extends ConsoleProgram
                 }
             case "getAvatar":
                 if (name == null || !accounts.containsKey(name)) {
-                    return FAILURE_PREFIX + "找不到账户";
+                    return FAILURE_PREFIX;
                 } else {
                     return HAWTools.imageToString(account.getAvatar());
                 }
             case "getStatus":
                 if (name == null || !accounts.containsKey(name)) {
-                    return FAILURE_PREFIX + "找不到账户";
+                    return FAILURE_PREFIX;
                 } else {
                     return account.getStatus() != null ? account.getStatus() : "";
                 }
             case "addFriend":
                 if (name_my == null || account_my == null) {
-                    return FAILURE_PREFIX + "找不到账户";
+                    return FAILURE_PREFIX;
                 } else if (name_friend == null || account_friend == null) {
-                    return FAILURE_PREFIX + "找不到账户" + name_friend;
+                    return FAILURE_PREFIX;
                 } else if (name_my.equals(name_friend)) {
-                    return FAILURE_PREFIX + "无法将自己添加为好友";
+                    return FAILURE_PREFIX;
                 } else if (account_my.getFriends().containsKey(name_friend)) {
-                    return FAILURE_PREFIX + "已经添加好友";
+                    return FAILURE_PREFIX;
                 } else {
                     account_my.setFriends(account_friend);
                     account_friend.setFriends(account_my);
@@ -119,7 +119,7 @@ public class WeChatServer extends ConsoleProgram
             case "getFriends":
                 account = accounts.get(name);
                 if (name == null || account == null) {
-                    return FAILURE_PREFIX + "：找不到账户";
+                    return FAILURE_PREFIX;
                 }
                 StringBuilder sb = new StringBuilder();
 
@@ -133,7 +133,7 @@ public class WeChatServer extends ConsoleProgram
                 sb.append("]");
                 return sb.toString();
             default:
-                return FAILURE_PREFIX + "未知命令【" + cmd + "】";
+                return FAILURE_PREFIX + ": 未知命令【" + cmd + "】";
         }
     }
 }
